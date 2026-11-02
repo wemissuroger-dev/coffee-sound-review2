@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0d12" />
+  <title>Оцените «Кофе Саунд»</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0d12;
+      --surface: rgba(22, 26, 35, 0.92);
+      --surface-strong: #191e29;
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #f6f7fb;
+      --muted: #9ba3b4;
+      --accent: #ffcc4d;
+      --accent-soft: rgba(255, 204, 77, 0.14);
+      --danger: #ff7d79;
+      --success: #69dfb0;
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-height: 100%; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px 16px;
+      overflow-x: hidden;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(87, 111, 255, 0.15), transparent 38%),
+        radial-gradient(circle at 0% 100%, rgba(255, 204, 77, 0.07), transparent 34%),
+        var(--bg);
+    }
+
+    .page-shell {
+      width: min(100%, 520px);
+    }
+
+    .card {
+      position: relative;
+      padding: clamp(24px, 7vw, 42px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(29, 34, 46, 0.92), rgba(14, 17, 24, 0.96));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      top: -135px;
+      right: -95px;
+      border-radius: 50%;
+      background: rgba(255, 204, 77, 0.1);
+      filter: blur(2px);
+      pointer-events: none;
+    }
+
+    .brand {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 34px;
+    }
+
+    .brand-mark {
+      width: 64px;
+      height: 64px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 50%;
+      background: linear-gradient(145deg, #f5c950, #b8791b);
+      color: #211a08;
+      font-size: 27px;
+      font-weight: 800;
+      box-shadow: 0 10px 30px rgba(255, 187, 48, 0.2);
+    }
+
+    .brand-copy small {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-copy strong {
+      font-size: clamp(18px, 5vw, 21px);
+      letter-spacing: -0.02em;
+    }
+
+    .intro h1 {
+      max-width: 430px;
+      margin: 0;
+      font-size: clamp(30px, 8vw, 46px);
+      line-height: 1.02;
+      letter-spacing: -0.055em;
+    }
+
+    .intro p {
+      margin: 15px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .rating-panel {
+      margin-top: 32px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .rating-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .rating-value {
+      min-width: 86px;
+      color: var(--text);
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .stars {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 7px;
+    }
+
+    .star {
+      min-height: 58px;
+      padding: 0;
+      border: 1px solid transparent;
+      border-radius: 15px;
+      color: #5f6878;
+      background: rgba(255, 255, 255, 0.04);
+      font-size: clamp(27px, 9vw, 36px);
+      line-height: 1;
+      cursor: pointer;
+      transition: transform 160ms ease, color 160ms ease, background 160ms ease, border-color 160ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .star:hover,
+    .star:focus-visible {
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-color: rgba(255, 204, 77, 0.25);
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    .star.is-active {
+      color: var(--accent);
+      background: var(--accent-soft);
+      text-shadow: 0 0 18px rgba(255, 204, 77, 0.45);
+    }
+
+    .response {
+      display: none;
+      margin-top: 22px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .response.is-visible {
+      display: block;
+      animation: fade-in 420ms ease both;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .response h2 {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.18;
+      letter-spacing: -0.025em;
+    }
+
+    .response p {
+      margin: 9px 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .review-links {
+      display: grid;
+      gap: 12px;
+    }
+
+    .review-link,
+    .submit-button {
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      border: 0;
+      border-radius: 16px;
+      color: #fff;
+      font: inherit;
+      font-weight: 750;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 160ms ease, filter 160ms ease, box-shadow 160ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .review-link:hover,
+    .review-link:focus-visible,
+    .submit-button:hover,
+    .submit-button:focus-visible {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+      outline: none;
+    }
+
+    .review-link:active,
+    .submit-button:active { transform: translateY(0); }
+
+    .review-link.yandex {
+      background: linear-gradient(135deg, #ff4d35, #e72d20);
+      box-shadow: 0 10px 24px rgba(255, 67, 42, 0.2);
+    }
+
+    .review-link.google {
+      background: linear-gradient(135deg, #4285f4, #3267d6);
+      box-shadow: 0 10px 24px rgba(66, 133, 244, 0.2);
+    }
+
+    .icon {
+      width: 28px;
+      height: 28px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.18);
+      font-size: 15px;
+      font-weight: 850;
+    }
+
+    .feedback-form { display: grid; gap: 13px; }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    textarea,
+    input[type="tel"] {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 13px;
+      padding: 14px;
+      color: var(--text);
+      background: rgba(8, 10, 14, 0.55);
+      font: inherit;
+      font-size: 16px;
+      resize: vertical;
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    textarea { min-height: 118px; }
+
+    textarea:focus,
+    input[type="tel"]:focus {
+      border-color: rgba(255, 204, 77, 0.7);
+      box-shadow: 0 0 0 4px rgba(255, 204, 77, 0.11);
+      outline: none;
+    }
+
+    textarea::placeholder,
+    input::placeholder { color: #687182; }
+
+    .submit-button {
+      width: 100%;
+      margin-top: 4px;
+      background: linear-gradient(135deg, #e4b63e, #b67b21);
+      color: #1e180a;
+      box-shadow: 0 10px 24px rgba(214, 161, 48, 0.18);
+    }
+
+    .form-message {
+      display: none;
+      margin: 14px 0 0;
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: var(--success);
+      background: rgba(105, 223, 176, 0.1);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .form-message.is-visible {
+      display: block;
+      animation: fade-in 300ms ease both;
+    }
+
+    .footer-note {
+      margin: 20px 0 0;
+      color: #697385;
+      font-size: 12px;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    @media (max-width: 380px) {
+      body { padding: 12px; }
+      .card { padding: 22px 16px; }
+      .rating-panel, .response { padding: 16px; }
+      .star { min-height: 52px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="card" aria-labelledby="page-title">
+      <header class="brand">
+        <!-- Замените символ R на логотип заведения или вставьте <img> -->
+        <div class="brand-mark" aria-label="Логотип заведения">КС</div>
+        <div class="brand-copy">
+          <small>Спасибо за визит</small>
+          <strong>Кофе Саунд</strong>
+        </div>
+      </header>
+
+      <div class="intro">
+        <h1 id="page-title">Понравилось обслуживание? Оцените нас!</h1>
+        <p>Ваша честная оценка помогает нам становиться лучше.</p>
+      </div>
+
+      <section class="rating-panel" aria-labelledby="rating-label">
+        <div class="rating-label">
+          <span id="rating-label">Ваша оценка</span>
+          <span class="rating-value" id="ratingValue" aria-live="polite">Выберите звезду</span>
+        </div>
+        <div class="stars" role="radiogroup" aria-label="Оценка от 1 до 5 звёзд">
+          <button class="star" type="button" data-rating="1" role="radio" aria-label="1 звезда" aria-checked="false">★</button>
+          <button class="star" type="button" data-rating="2" role="radio" aria-label="2 звезды" aria-checked="false">★</button>
+          <button class="star" type="button" data-rating="3" role="radio" aria-label="3 звезды" aria-checked="false">★</button>
+          <button class="star" type="button" data-rating="4" role="radio" aria-label="4 звезды" aria-checked="false">★</button>
+          <button class="star" type="button" data-rating="5" role="radio" aria-label="5 звёзд" aria-checked="false">★</button>
+        </div>
+      </section>
+
+      <section class="response" id="positiveResponse" aria-live="polite" aria-labelledby="positiveTitle">
+        <h2 id="positiveTitle">Где вам удобнее оставить отзыв?</h2>
+        <p>Спасибо! Поделитесь впечатлениями — это очень помогает ресторану.</p>
+        <div class="review-links">
+          <a class="review-link yandex" href="https://share.google/4RMhiNkIyVAHVjBFn" target="_blank" rel="noopener noreferrer" aria-label="Оставить отзыв на Яндекс Картах">
+            <span class="icon">Я</span>
+            Яндекс Карты
+          </a>
+          <a class="review-link google" href="https://search.google.com/local/writereview?placeid=ChIJVeWo6j7R2EYRsuGei7FdKwM&hl=ru" target="_blank" rel="noopener noreferrer" aria-label="Оставить отзыв в Google Картах">
+            <span class="icon">G</span>
+            Google Карты
+          </a>
+        </div>
+      </section>
+
+      <section class="response" id="negativeResponse" aria-live="polite" aria-labelledby="negativeTitle">
+        <h2 id="negativeTitle">Нам очень жаль!</h2>
+        <p>Пожалуйста, помогите нам стать лучше — расскажите, что пошло не так.</p>
+        <form class="feedback-form" id="feedbackForm">
+          <label>
+            Что случилось?
+            <textarea name="complaint" placeholder="Опишите ситуацию…" required></textarea>
+          </label>
+          <label>
+            Номер телефона
+            <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" inputmode="tel" required />
+          </label>
+          <button class="submit-button" type="submit">Отправить директору</button>
+        </form>
+        <div class="form-message" id="formMessage" role="status">Спасибо! Ваше обращение передано руководству</div>
+      </section>
+
+      <p class="footer-note">Нажмите на одну звезду, чтобы продолжить</p>
+    </section>
+  </main>
+
+  <script>
+    const stars = document.querySelectorAll('.star');
+    const ratingValue = document.getElementById('ratingValue');
+    const positiveResponse = document.getElementById('positiveResponse');
+    const negativeResponse = document.getElementById('negativeResponse');
+    const feedbackForm = document.getElementById('feedbackForm');
+    const formMessage = document.getElementById('formMessage');
+
+    const ratingLabels = {
+      1: '1 звезда',
+      2: '2 звезды',
+      3: '3 звезды',
+      4: '4 звезды',
+      5: '5 звёзд'
+    };
+
+    function setRating(value) {
+      stars.forEach((star) => {
+        const isActive = Number(star.dataset.rating) <= value;
+        star.classList.toggle('is-active', isActive);
+        star.setAttribute('aria-checked', String(Number(star.dataset.rating) === value));
+      });
+
+      ratingValue.textContent = ratingLabels[value];
+      positiveResponse.classList.toggle('is-visible', value >= 4);
+      negativeResponse.classList.toggle('is-visible', value <= 3);
+
+      if (value <= 3) {
+        formMessage.classList.remove('is-visible');
+      }
+    }
+
+    stars.forEach((star) => {
+      star.addEventListener('click', () => setRating(Number(star.dataset.rating)));
+    });
+
+    feedbackForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      formMessage.classList.add('is-visible');
+      feedbackForm.reset();
+    });
+  </script>
+</body>
+</html>
